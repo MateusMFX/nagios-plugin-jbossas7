@@ -70,9 +70,9 @@ Sample output:
 
 ===== Check Ternured Gen Utilization =====
 
-The option +ternured_gen_usage+ allows you to monitor the old gen memory utilization of the JVM. Default thresholds are +WARNING+ - 80 inclusive and +CRITICAL+ - 90 inclusive.
+The option +ternured_gen_usage+ allows you to monitor the ternured gen memory utilization of the JVM. Default thresholds are +WARNING+ - 80 inclusive and +CRITICAL+ - 90 inclusive.
 In the example below 80 is the +WARNING+ threshold while 95 is the +CRITICAL+ threshold.
-These thresholds are compared to the perecentage of +used+ old gen space against +max+ available.
+These thresholds are compared to the perecentage of +used+ ternured gen space against +max+ available.
 
  define service {
     use                     generic-service
@@ -88,7 +88,7 @@ Sample output:
 
 ===== Check Survivor Space Utilization =====
 
-The option +survivor_space_usage+ allows you to monitor the old gen memory utilization of the JVM. Default thresholds are +WARNING+ - 80 inclusive and +CRITICAL+ - 90 inclusive.
+The option +survivor_space_usage+ allows you to monitor the survivor space memory utilization of the JVM. Default thresholds are +WARNING+ - 80 inclusive and +CRITICAL+ - 90 inclusive.
 In the example below 80 is the +WARNING+ threshold while 95 is the +CRITICAL+ threshold.
 These thresholds are compared to the perecentage of +used+ survivor space against +max+ available.
 
