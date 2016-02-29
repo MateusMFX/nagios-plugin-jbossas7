@@ -86,6 +86,24 @@ Examples of memory_pool types: +Tenured_Gen+
 Sample output:
 +OK - Ternured_Gen Utilization 134MB of 341MB |ternured_gen_usage=39.30%;80;95+
 
+===== Check Survivor Space Utilization =====
+
+The option +survivor_space_usage+ allows you to monitor the old gen memory utilization of the JVM. Default thresholds are +WARNING+ - 80 inclusive and +CRITICAL+ - 90 inclusive.
+In the example below 80 is the +WARNING+ threshold while 95 is the +CRITICAL+ threshold.
+These thresholds are compared to the perecentage of +used+ survivor space against +max+ available.
+
+ define service {
+    use                     generic-service
+    hostgroup_name          JBossAS Servers
+    service_description     JBossAS Server Survivor Space Usage Check
+    check_command           check_jboss_memory!survivor_space_usage!9990!admin!password123!80!95!Survivor_Space
+ }
+
+Examples of memory_pool types: +Survivor_Space+
+
+Sample output:
++OK - Survivor_Space Utilization 0MB of 17MB |survivor_space_usage=0.00%;80;90+
+
 ===== Check Perm Gen Utilization =====
 
 The option +perm_gen_usage+ allows you to monitor the perm gen memory utilization of the JVM. Default thresholds are +WARNING+ - 90 inclusive and +CRITICAL+ - 95 inclusive.

@@ -54,7 +54,7 @@ Options:
 Currently the plugin supports monitoring of following resources and sub-systems.
 
 link:server.asciidoc[Server Status] :: Checks JBossAS status
-link:memory.asciidoc[JVM Memory Utilization] :: Checks Heap, Non Heap, Ternured Gen, Eden Space, Perm Gen, and Code cache utilization
+link:memory.asciidoc[JVM Memory Utilization] :: Checks Heap, Non Heap, Ternured Gen, Survivor Space, Eden Space, Perm Gen, and Code cache utilization
 link:gc.asciidoc[Garbage Collection] :: Checks garbage collection rate
 link:messaging.asciidoc[HornetQ Messaging] :: Checks message queue depths
 link:datasource.asciidoc[DataSource Pool Usage] :: Checks datasource pool utilization
