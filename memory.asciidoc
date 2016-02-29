@@ -68,23 +68,23 @@ Sample output:
 +OK - Eden_Space Utilization 43MB of 56MB |eden_space_usage=76.79%;80;95+
 
 
-===== Check Old Gen Utilization =====
+===== Check Ternured Gen Utilization =====
 
-The option +old_gen_usage+ allows you to monitor the old gen memory utilization of the JVM. Default thresholds are +WARNING+ - 80 inclusive and +CRITICAL+ - 90 inclusive.
+The option +ternured_gen_usage+ allows you to monitor the old gen memory utilization of the JVM. Default thresholds are +WARNING+ - 80 inclusive and +CRITICAL+ - 90 inclusive.
 In the example below 80 is the +WARNING+ threshold while 95 is the +CRITICAL+ threshold.
 These thresholds are compared to the perecentage of +used+ old gen space against +max+ available.
 
  define service {
     use                     generic-service
     hostgroup_name          JBossAS Servers
-    service_description     JBossAS Server Old Gen Usage Check
-    check_command           check_jboss_memory!old_gen_usage!9990!admin!password123!80!95!memory_pool
+    service_description     JBossAS Server Ternured Gen Usage Check
+    check_command           check_jboss_memory!ternured_gen_usage!9990!admin!password123!80!95!Tenured_Gen
  }
 
-Examples of memory_pool types: +PS_Old_Gen+, +G1_Old_Gen+
+Examples of memory_pool types: +Tenured_Gen+
 
 Sample output:
-+OK - Old_Gen Utilization 134MB of 341MB |old_gen_usage=39.30%;80;95+
++OK - Ternured_Gen Utilization 134MB of 341MB |ternured_gen_usage=39.30%;80;95+
 
 ===== Check Perm Gen Utilization =====
 

@@ -209,7 +209,7 @@ def main(argv):
     p.add_option('-C', '--critical', action='store', dest='critical', default=None, help='The critical threshold we want to set')
     p.add_option('-A', '--action', action='store', type='choice', dest='action', default='server_status', help='The action you want to take',
                  choices=['server_status', 'heap_usage', 'non_heap_usage', 'eden_space_usage',
-                          'old_gen_usage', 'perm_gen_usage', 'code_cache_usage', 'gctime',
+                          'ternured_gen_usage', 'perm_gen_usage', 'code_cache_usage', 'gctime',
                           'queue_depth', 'datasource', 'xa_datasource', 'threading'])
     p.add_option('-D', '--perf-data', action='store_true', dest='perf_data', default=False, help='Enable output of Nagios performance data')
     p.add_option('-m', '--memorypool', action='store', dest='memory_pool', default=None, help='The memory pool type')
@@ -251,8 +251,8 @@ def main(argv):
         return check_non_heap_usage(host, port, user, passwd, warning, critical, perf_data)
     elif action == "eden_space_usage":
         return check_eden_space_usage(host, port, user, passwd, memory_pool, warning, critical, perf_data)
-    elif action == "old_gen_usage":
-        return check_old_gen_usage(host, port, user, passwd, memory_pool, warning, critical, perf_data)
+    elif action == "ternured_gen_usage":
+        return check_ternured_gen_usage(host, port, user, passwd, memory_pool, warning, critical, perf_data)
     elif action == "perm_gen_usage":
         return check_perm_gen_usage(host, port, user, passwd, memory_pool, warning, critical, perf_data)
     elif action == "code_cache_usage":
@@ -388,7 +388,7 @@ def check_eden_space_usage(host, port, user, passwd, memory_pool, warning, criti
     except Exception, e:
         return exit_with_general_critical(e)
 
-def check_old_gen_usage(host, port, user, passwd, memory_pool, warning, critical, perf_data):
+def check_ternured_gen_usage(host, port, user, passwd, memory_pool, warning, critical, perf_data):
     warning = warning or 80
     critical = critical or 90
     
@@ -397,8 +397,8 @@ def check_old_gen_usage(host, port, user, passwd, memory_pool, warning, critical
         max_heap = get_memory_pool_usage(host, port, user, passwd, memory_pool, 'max')
         percent = round((float(used_heap * 100) / max_heap), 2)
         
-        message = "Old_Gen Utilization %sMB of %sMB" % (used_heap, max_heap)
-        message += performance_data(perf_data, [("%.2f%%" % percent, "old_gen_usage", warning, critical)])
+        message = "Ternured_Gen Utilization %sMB of %sMB" % (used_heap, max_heap)
+        message += performance_data(perf_data, [("%.2f%%" % percent, "ternured_gen_usage", warning, critical)])
     
         return check_levels(percent, warning, critical, message)
     except Exception, e:
