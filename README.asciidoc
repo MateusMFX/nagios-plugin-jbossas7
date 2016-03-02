@@ -51,6 +51,8 @@ Options:
                         The threading statistics type
 ----
 
+There is also some examples of using this plugin as an check_mk MRPE plugin in the link:check_mk.example folder.
+
 Currently the plugin supports monitoring of following resources and sub-systems.
 
 link:server.asciidoc[Server Status] :: Checks JBossAS status
@@ -59,7 +61,6 @@ link:gc.asciidoc[Garbage Collection] :: Checks garbage collection rate
 link:messaging.asciidoc[HornetQ Messaging] :: Checks message queue depths
 link:datasource.asciidoc[DataSource Pool Usage] :: Checks datasource pool utilization
 link:threading.asciidoc[Threading] :: Checks JVM process thread utilization
-
 
 === Licensing and Copyright: ===
 
