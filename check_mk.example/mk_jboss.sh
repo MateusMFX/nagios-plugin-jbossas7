@@ -14,19 +14,22 @@ case $1 in
     non_heap)
         python ./check_jbossas7.py -H $JBOSS_HOST -P $JBOSS_PORT -u $JBOSS_USER -p $JBOSS_PASS -A non_heap_usage -D
         ;;
-    code_cache)
-        python ./check_jbossas7.py -H $JBOSS_HOST -P $JBOSS_PORT -u $JBOSS_USER -p $JBOSS_PASS -A code_cache_usage -D
-        ;;
-    perm_gen)
-        python ./check_jbossas7.py -H $JBOSS_HOST -P $JBOSS_PORT -u $JBOSS_USER -p $JBOSS_PASS -A perm_gen_usage -m PS_Perm_Gen -D
-        ;;
-    eden_space)
-        python ./check_jbossas7.py -H $JBOSS_HOST -P $JBOSS_PORT -u $JBOSS_USER -p $JBOSS_PASS -A eden_space_usage -m PS_Eden_Space -D
-        ;;
     tenured_gen)
         python ./check_jbossas7.py -H $JBOSS_HOST -P $JBOSS_PORT -u $JBOSS_USER -p $JBOSS_PASS -A tenured_gen_usage -m PS_Old_Gen -D
         ;;
     survivor_space)
         python ./check_jbossas7.py -H $JBOSS_HOST -P $JBOSS_PORT -u $JBOSS_USER -p $JBOSS_PASS -A survivor_space_usage -m PS_Survivor_Space -D
+        ;;
+    compressed_class)
+        python ./check_jbossas7.py -H $JBOSS_HOST -P $JBOSS_PORT -u $JBOSS_USER -p $JBOSS_PASS -A compressed_class_usage -D
+        ;;
+    code_cache)
+        python ./check_jbossas7.py -H $JBOSS_HOST -P $JBOSS_PORT -u $JBOSS_USER -p $JBOSS_PASS -A code_cache_usage -D
+        ;;
+    eden_space)
+        python ./check_jbossas7.py -H $JBOSS_HOST -P $JBOSS_PORT -u $JBOSS_USER -p $JBOSS_PASS -A eden_space_usage -m PS_Eden_Space -D
+        ;;
+    metaspace)
+        python ./check_jbossas7.py -H $JBOSS_HOST -P $JBOSS_PORT -u $JBOSS_USER -p $JBOSS_PASS -A metaspace_usage -D
         ;;
 esac
