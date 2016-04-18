@@ -209,7 +209,7 @@ def main(argv):
     p.add_option('-C', '--critical', action='store', dest='critical', default=None, help='The critical threshold we want to set')
     p.add_option('-A', '--action', action='store', type='choice', dest='action', default='server_status', help='The action you want to take',
                  choices=['server_status', 'heap_usage', 'non_heap_usage', 'eden_space_usage',
-                          'tenured_gen_usage', 'survivor_space_usage' , 'perm_gen_usage', 'code_cache_usage', 'gctime',
+                          'tenured_gen_usage', 'survivor_space_usage' , 'perm_gen_usage', 'code_cache_usage', 'compressed_class_usage', 'metaspace_usage', 'gctime',
                           'queue_depth', 'datasource', 'xa_datasource', 'threading'])
     p.add_option('-D', '--perf-data', action='store_true', dest='perf_data', default=False, help='Enable output of Nagios performance data')
     p.add_option('-m', '--memorypool', action='store', dest='memory_pool', default=None, help='The memory pool type')
@@ -259,6 +259,10 @@ def main(argv):
         return check_perm_gen_usage(host, port, user, passwd, memory_pool, warning, critical, perf_data)
     elif action == "code_cache_usage":
         return check_code_cache_usage(host, port, user, passwd, memory_pool, warning, critical, perf_data)
+    elif action == "compressed_class_usage":
+        return check_compressed_class_usage(host, port, user, passwd, memory_pool, warning, critical, perf_data)
+    elif action == "metaspace_usage":
+        return check_metaspace_usage(host, port, user, passwd, memory_pool, warning, critical, perf_data)
     elif action == "datasource":
         return check_non_xa_datasource(host, port, user, passwd, datasource_name, ds_stat_type, warning, critical, perf_data)
     elif action == "xa_datasource":
@@ -367,7 +371,7 @@ def get_memory_pool_usage(host, port, user, passwd, pool_name, memory_value):
         url = "/core-service/platform-mbean/type/memory-pool"
 
         data = get_digest_auth_json(host, port, url, user, passwd, payload)
-        usage = data['name'][pool_name]['usage'][memory_value] / float(1024 * 1024)
+        usage = data['name'][pool_name]['usage'][memory_value] / (1024 * 1024)
 
         return usage
     except Exception, e:
@@ -457,6 +461,43 @@ def check_code_cache_usage(host, port, user, passwd, memory_pool, warning, criti
     except Exception, e:
         return exit_with_general_critical(e)
 
+def check_compressed_class_usage(host, port, user, passwd, memory_pool, warning, critical, perf_data):
+    warning = warning or 90
+    critical = critical or 95
+
+    try:
+    	if memory_pool == None:
+    		memory_pool = 'Compressed_Class_Space'
+
+        used_heap = get_memory_pool_usage(host, port, user, passwd, memory_pool, 'used')
+        max_heap = get_memory_pool_usage(host, port, user, passwd, memory_pool, 'max')
+        percent = round((float(used_heap * 100) / max_heap), 2)
+
+        message = "Compressed_Class_Space Utilization %sMB of %sMB" % (used_heap, max_heap)
+        message += performance_data(perf_data, [("%.2f%%" % percent, "compressed_class_usage", warning, critical)])
+
+        return check_levels(percent, warning, critical, message)
+    except Exception, e:
+        return exit_with_general_critical(e)
+
+def check_metaspace_usage(host, port, user, passwd, memory_pool, warning, critical, perf_data):
+    warning = warning or 90
+    critical = critical or 95
+
+    try:
+    	if memory_pool == None:
+    		memory_pool = 'Metaspace'
+
+        used_heap = get_memory_pool_usage(host, port, user, passwd, memory_pool, 'used')
+        max_heap = get_memory_pool_usage(host, port, user, passwd, memory_pool, 'max')
+        percent = round((float(used_heap * 100) / max_heap), 2)
+
+        message = "Metaspace Utilization %sMB of %sMB" % (used_heap, max_heap)
+        message += performance_data(perf_data, [("%.2f%%" % percent, "metaspace_usage", warning, critical)])
+
+        return check_levels(percent, warning, critical, message)
+    except Exception, e:
+        return exit_with_general_critical(e)
 
 def check_gctime(host, port, user, passwd, memory_pool, warning, critical, perf_data):
     # Make sure you configure right values for your application
