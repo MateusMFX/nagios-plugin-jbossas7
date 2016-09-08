@@ -210,7 +210,7 @@ def main(argv):
     p.add_option('-A', '--action', action='store', type='choice', dest='action', default='server_status', help='The action you want to take',
                  choices=['server_status', 'heap_usage', 'non_heap_usage', 'eden_space_usage',
                           'tenured_gen_usage', 'survivor_space_usage' , 'perm_gen_usage', 'code_cache_usage', 'compressed_class_usage', 'metaspace_usage', 'gctime',
-                          'queue_depth', 'datasource', 'xa_datasource', 'threading'])
+                          'queue_depth', 'datasource', 'xa_datasource', 'threading', 'deployment_status'])
     p.add_option('-D', '--perf-data', action='store_true', dest='perf_data', default=False, help='Enable output of Nagios performance data')
     p.add_option('-m', '--memorypool', action='store', dest='memory_pool', default=None, help='The memory pool type')
     p.add_option('-q', '--queuename', action='store', dest='queue_name', default=None, help='The queue name for which you want to retrieve queue depth')
@@ -241,6 +241,8 @@ def main(argv):
 
     if action == "server_status":
         return check_server_status(host, port, user, passwd, warning, critical, perf_data)
+    elif action == "deployment_status":
+        return check_deployment_status(host, port, user, passwd, warning, critical, perf_data, memory_pool)
     elif action == "gctime":
         return check_gctime(host, port, user, passwd, memory_pool, warning, critical, perf_data)
     elif action == "queue_depth":
@@ -311,6 +313,24 @@ def check_server_status(host, port, user, passwd, warning, critical, perf_data):
 
         message = "Server Status '%s'" % res
         message += performance_data(perf_data, [(res, "server_status", warning, critical)])
+
+        return check_levels(res, warning, critical, message, ok)
+    except Exception, e:
+        return exit_with_general_critical(e)
+
+def check_deployment_status(host, port, user, passwd, warning, critical, perf_data, memory_pool):
+    warning = warning or "reload-required"
+    critical = critical or ""
+    ok = "OK"
+
+    try:
+        # payload = {'operation': 'read-attribute', 'name': 'status'}
+        payload = {'operation': 'read-attribute', 'name': 'status', 'recursive': 'true', 'include-runtime': 'true', 'address': ['deployment', memory_pool], 'json.pretty':1}
+        res = post_digest_auth_json(host, port, "", user, passwd, payload)
+        res = res['result']
+
+        message = "'%s' Status: '%s'" % (memory_pool, res)
+        message += performance_data(perf_data, [(res, "deployment_status", warning, critical)])
 
         return check_levels(res, warning, critical, message, ok)
     except Exception, e:

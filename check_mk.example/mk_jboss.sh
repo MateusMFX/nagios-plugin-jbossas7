@@ -32,4 +32,14 @@ case $1 in
     metaspace)
         python ./check_jbossas7.py -H $JBOSS_HOST -P $JBOSS_PORT -u $JBOSS_USER -p $JBOSS_PASS -A metaspace_usage -D
         ;;
+    diarion_deployment)
+        python ./check_jbossas7.py -H $JBOSS_HOST -P $JBOSS_PORT -u $JBOSS_USER -p $JBOSS_PASS -A deployment_status -m diarion.war
+        ;;
+    kapta_deployment)
+        python ./check_jbossas7.py -H $JBOSS_HOST -P $JBOSS_PORT -u $JBOSS_USER -p $JBOSS_PASS -A deployment_status -m kapta.war
+        ;;
+    server_status)
+        python ./check_jbossas7.py -H $JBOSS_HOST -P $JBOSS_PORT -u $JBOSS_USER -p $JBOSS_PASS -A server_status
+        ;;
+
 esac
